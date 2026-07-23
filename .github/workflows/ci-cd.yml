@@ -5,20 +5,19 @@ on:
     branches:
       - main
       - master
-
   pull_request:
     branches:
       - main
       - master
 
 jobs:
-
   build-test-deploy:
-
     runs-on: ubuntu-latest
 
-    steps:
+    env:
+      APP_ENV: ${{ secrets.APP_ENV }}
 
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -33,12 +32,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Flake8
-        run: |
-          flake8 .
+        run: flake8 .
 
       - name: Run Tests
-        run: |
-          pytest
+        run: pytest
 
       - name: Build Application
         run: |
@@ -47,5 +44,5 @@ jobs:
 
       - name: Deploy to Staging
         run: |
-          echo "Deploying Application to Staging Environment..."
+          echo "Deploying to $APP_ENV environment..."
           echo "Deployment Successful!"
